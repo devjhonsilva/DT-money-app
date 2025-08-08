@@ -1,4 +1,5 @@
 const { colors } = require("./src/shared/colors");
+
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [require("nativewind/preset")],
@@ -15,7 +16,9 @@ module.exports = {
         "2xl": "24px",
         "3xl": "30px",
         "4xl": "36px",
-        "5xl": "48px",
+      },
+      height: {
+        button: 57,
       },
       colors,
     },
