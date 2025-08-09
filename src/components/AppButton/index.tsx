@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren } from "react";
 import clsx from "clsx";
 import { colors } from "@/shared/colors";
 type AppButtonMode = "fill" | "outline";
@@ -17,17 +17,6 @@ export const AppButton: FC<PropsWithChildren<AppButtonParams>> = ({
   ...rest
 }) => {
   const isFill = mode === "fill";
-
-  useEffect(() => {
-    if (children === undefined || typeof children !== "string") {
-      console.warn(
-        "[AppButton] Children suspeito:",
-        children,
-        "Tipo:",
-        typeof children
-      );
-    }
-  }, [children]);
 
   return (
     <TouchableOpacity
