@@ -1,13 +1,13 @@
 import { AppButton } from "@/components/AppButton";
 import { AppInput } from "@/components/AppInput";
-import { PublicStackParamsList } from "@/screens/Login";
+import { PublicStackParamsList } from "@/routes/PublicRoutes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { View, Text } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schema";
 
-interface FormRegisterParams {
+export interface FormRegisterParams {
   name: string;
   email: string;
   password: string;

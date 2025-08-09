@@ -1,11 +1,15 @@
 import { AppButton } from "@/components/AppButton";
 import { AppInput } from "@/components/AppInput";
-import { PublicStackParamsList } from "@/routes/PublicRoutes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schema";
+
+export type PublicStackParamsList = {
+  Login: undefined;
+  Register: undefined;
+};
 
 export interface FormLoginParams {
   email: string;

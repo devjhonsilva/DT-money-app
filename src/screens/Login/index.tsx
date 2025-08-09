@@ -4,15 +4,11 @@ import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { View } from "react-native";
 import { LoginForm } from "./LoginForm";
-
-export type PublicStackParamsList = {
-  Login: undefined;
-  Register: undefined;
-};
+import { useAuthContext } from "@/context/auth.context";
 
 export const Login = () => {
-  const navigation =
-    useNavigation<StackNavigationProp<PublicStackParamsList>>();
+  const { user } = useAuthContext();
+  console.log(user);
 
   return (
     <DismissKeyboardView>
