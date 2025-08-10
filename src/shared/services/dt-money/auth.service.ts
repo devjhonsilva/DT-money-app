@@ -1,5 +1,6 @@
-import { FormLoginParams } from "@/screens/Login/LoginForm";
 import { dtMoneyApi } from "@/shared/api/dt-money";
+import { FormLoginParams } from "@/screens/Login/LoginForm";
+import { FormRegisterParams } from "@/screens/Register/RegisterForm";
 import { IAuthenticateResponse } from "@/shared/interfaces/https/authenticate-response";
 
 export const autenticate = async (
@@ -10,5 +11,15 @@ export const autenticate = async (
     userData
   );
 
+  return data;
+};
+
+export const registerUser = async (
+  userData: FormRegisterParams
+): Promise<IAuthenticateResponse> => {
+  const { data } = await dtMoneyApi.post<IAuthenticateResponse>(
+    "/auth/register",
+    userData
+  );
   return data;
 };
