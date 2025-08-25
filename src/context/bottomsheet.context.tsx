@@ -22,7 +22,7 @@ export const BottomSheetContext = createContext({} as BottomSheetContextType);
 export const BottomSheetProvider: FC<PropsWithChildren> = ({ children }) => {
   const [content, setContent] = useState<React.ReactNode | null>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ["70%", "90%"];
+  const snapPoints = ["60%", "80%"];
   const [index, setIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
 

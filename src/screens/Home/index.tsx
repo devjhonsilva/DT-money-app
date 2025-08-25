@@ -8,12 +8,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ListHeader } from "./ListHeader";
 import { TransactionCard } from "./ListHeader/TransactionCard";
 import { TransactionList } from "./TransactionList";
+import { RefreshControl } from "react-native-gesture-handler";
 
 export const Home = () => {
   const { handleLogout } = useAuthContext();
 
-  const { fetchCategories, fecthTransactions, transactions } =
-    useTransactionContext();
+  const {
+    fetchCategories,
+    fecthTransactions,
+    transactions,
+    refreshTransactions,
+    loading,
+  } = useTransactionContext();
   const { handlerError } = useErrorHandler();
 
   const handleFetchCategories = async () => {
@@ -32,11 +38,17 @@ export const Home = () => {
   return (
     <SafeAreaView className="flex-1 bg-background-primary">
       <FlatList
-        className="bg-background-secondary"
-        ListHeaderComponent={ListHeader}
         data={transactions}
+        ListHeaderComponent={ListHeader}
+        className="bg-background-secondary"
         keyExtractor={({ id }) => `transaction-${id}`}
         renderItem={({ item }) => <TransactionList transaction={item} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={refreshTransactions}
+            refreshing={loading}
+          />
+        }
       />
     </SafeAreaView>
   );

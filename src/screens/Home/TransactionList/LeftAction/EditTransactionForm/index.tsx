@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -7,44 +7,52 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { CreateTransactionInterface } from "@/shared/interfaces/https/create-transaction-request";
+import { UpdateTransactionInterface } from "@/shared/interfaces/https/update-transaction-request";
 import { colors } from "@/shared/colors";
 import { useBottomSheetContext } from "@/context/bottomsheet.context";
 import CurrencyInput from "react-native-currency-input";
-import { TransactionTypeSelector } from "../SelectType";
-import { SelectCategoryModal } from "../SelectCategoryModal";
-import { transactionSchema } from "./schema";
 import * as Yup from "yup";
-import { AppButton } from "../AppButton";
-import { ErrorMessage } from "../ErrorMessage";
 import { useTransactionContext } from "@/context/transaction.context";
 import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import { SelectCategoryModal } from "@/components/SelectCategoryModal";
+import { TransactionTypeSelector } from "@/components/SelectType";
+import { AppButton } from "@/components/AppButton";
+import { transactionSchema } from "./schema";
+import { Transaction } from "@/shared/interfaces/https/transaction";
 
-type ValidationErrorsTypes = Record<keyof CreateTransactionInterface, string>;
+type ValidationErrorsTypes = Record<keyof UpdateTransactionInterface, string>;
 
-export const NewTransaction = () => {
+interface Params {
+  transaction: Transaction;
+}
+
+export const EditTransaction: FC<Params> = ({
+  transaction: transactionToUpdate,
+}) => {
   const [validationErrors, setValidationErrors] =
     useState<ValidationErrorsTypes>();
   const { closeBottomSheet } = useBottomSheetContext();
-  const { createTransaction } = useTransactionContext();
+  const { updateTransaction } = useTransactionContext();
   const { handlerError } = useErrorHandler();
 
   const [loading, setLoading] = useState(false);
 
-  const [transaction, setTransaction] = useState<CreateTransactionInterface>({
-    categoryId: 0,
-    description: "",
-    typeId: 0,
-    value: 0,
+  const [transaction, setTransaction] = useState<UpdateTransactionInterface>({
+    categoryId: transactionToUpdate.categoryId,
+    description: transactionToUpdate.description,
+    id: transactionToUpdate.id,
+    typeId: transactionToUpdate.typeId,
+    value: transactionToUpdate.value,
   });
 
-  const handleCreateTransaction = async () => {
+  const handleUpdateTransaction = async () => {
     try {
       setLoading(true);
       await transactionSchema.validate(transaction, {
         abortEarly: false,
       });
-      await createTransaction(transaction);
+      await updateTransaction(transaction);
       closeBottomSheet();
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -52,7 +60,7 @@ export const NewTransaction = () => {
 
         error.inner.forEach((err) => {
           if (err.path) {
-            errors[err.path as keyof CreateTransactionInterface] = err.message;
+            errors[err.path as keyof UpdateTransactionInterface] = err.message;
           }
         });
         setValidationErrors(errors);
@@ -65,7 +73,7 @@ export const NewTransaction = () => {
   };
 
   const setTransactionData = (
-    key: keyof CreateTransactionInterface,
+    key: keyof UpdateTransactionInterface,
     value: string | number
   ) => {
     setTransaction((prevData) => ({ ...prevData, [key]: value }));
@@ -76,14 +84,14 @@ export const NewTransaction = () => {
         onPress={closeBottomSheet}
         className="w-full flex-row items-center justify-between"
       >
-        <Text className="text-white text-xl font-bold">Nova transação</Text>
+        <Text className="text-white text-xl font-bold">Editar transação</Text>
         <MaterialIcons name="close" color={colors.gray["700"]} size={20} />
       </TouchableOpacity>
 
       <View className="flex-1 mt-8 mb-8">
         <TextInput
-          onChangeText={(text) => setTransactionData("description", text)}
           value={transaction.description}
+          onChangeText={(text) => setTransactionData("description", text)}
           className="text-white text-lg h-[50px] bg-background-primary my-2 rounded-[6] pl-4"
           placeholder="Descrição"
           placeholderTextColor={colors.gray["700"]}
@@ -122,8 +130,8 @@ export const NewTransaction = () => {
         )}
 
         <View className="my-4">
-          <AppButton onPress={handleCreateTransaction}>
-            {loading ? <ActivityIndicator color={colors.white} /> : "Registrar"}
+          <AppButton onPress={handleUpdateTransaction}>
+            {loading ? <ActivityIndicator color={colors.white} /> : "Atualizar"}
           </AppButton>
         </View>
       </View>
